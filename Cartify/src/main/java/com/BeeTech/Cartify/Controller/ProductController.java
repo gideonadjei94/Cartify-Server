@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class ProductController {
 
-    @RequestMapping
+    @RequestMapping("/")
     public String greet(){
         return "Hello, Welcome to BeeTech";
     }
