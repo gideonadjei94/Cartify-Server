@@ -3,12 +3,19 @@ package com.BeeTech.Cartify.Service.Product;
 import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class ProductService implements ProductServiceInt {
 
+    @Autowired
     private ProductRepository productRepository;
+
     @Override
     public Product addProduct(Product product) {
         return null;
@@ -40,31 +47,31 @@ public class ProductService implements ProductServiceInt {
 
     @Override
     public List<Product> getProductsByCategory(String category) {
-        return null;
+        return productRepository.findByCategoryName(category);
     }
 
     @Override
     public List<Product> getProductsByBrand(String brand) {
-        return null;
+        return productRepository.findByBrand(brand);
     }
 
     @Override
     public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        return null;
+        return productRepository.findByCategoryNameAndBrand(category, brand);
     }
 
     @Override
     public List<Product> getProductsByName(String name) {
-        return null;
+        return productRepository.findByName(name);
     }
 
     @Override
-    public List<Product> getProductsByBrandAndName(String band, String name) {
-        return null;
+    public List<Product> getProductsByBrandAndName(String brand, String name) {
+        return productRepository.findByBrandAndName(brand, name);
     }
 
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
-        return null;
+        return productRepository.countByBrandAndName(brand, name);
     }
 }
