@@ -1,10 +1,14 @@
 package com.BeeTech.Cartify.Service.Product;
 
+import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
 import com.BeeTech.Cartify.Model.Product;
+import com.BeeTech.Cartify.Repository.ProductRepository;
 
 import java.util.List;
 
 public class ProductService implements ProductServiceInt {
+
+    private ProductRepository productRepository;
     @Override
     public Product addProduct(Product product) {
         return null;
@@ -12,11 +16,15 @@ public class ProductService implements ProductServiceInt {
 
     @Override
     public Product getProductById(Long id) {
-        return null;
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
+        productRepository.findById(id)
+                .ifPresentOrElse(
+                        productRepository::delete,
+                        () -> new ProductNotFoundException("Product not found"));
 
     }
 
@@ -27,7 +35,7 @@ public class ProductService implements ProductServiceInt {
 
     @Override
     public List<Product> getAllProducts() {
-        return null;
+        return productRepository.findAll();
     }
 
     @Override
