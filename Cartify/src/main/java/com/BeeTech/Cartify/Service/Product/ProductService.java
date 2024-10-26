@@ -1,24 +1,51 @@
 package com.BeeTech.Cartify.Service.Product;
 
 import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
+import com.BeeTech.Cartify.Model.Category;
 import com.BeeTech.Cartify.Model.Product;
+import com.BeeTech.Cartify.Repository.CategoryRepository;
 import com.BeeTech.Cartify.Repository.ProductRepository;
+import com.BeeTech.Cartify.Request.AddProductRequest;
+import com.BeeTech.Cartify.Request.UpdateproductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService implements ProductServiceInt {
 
-    @Autowired
-    private ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
+
+    private final CategoryRepository categoryRepository;
 
     @Override
-    public Product addProduct(Product product) {
-        return null;
+    public Product addProduct(AddProductRequest request) {
+        //Checking if the category exists
+        //If Yes, set it as the new product category
+        //If No, save it as a new category
+        //Then set the new product category
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(() -> {
+                    Category newCategory = new Category(request.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
+        request.setCategory(category);
+       return productRepository.save(createProduct(request, category));
+    }
+    private Product createProduct(AddProductRequest request, Category category){
+        return new Product(
+                request.getName(),
+                request.getBrand(),
+                request.getPrice(),
+                request.getInventory(),
+                request.getDescription(),
+                category
+        );
     }
 
     @Override
@@ -36,8 +63,24 @@ public class ProductService implements ProductServiceInt {
     }
 
     @Override
-    public void updateProduct(Product product, Long productId) {
+    public Product updateProduct(UpdateproductRequest request, Long productId) {
+        return productRepository.findById(productId)
+                .map(existingProduct -> updateExistingProduct(existingProduct, request))
+                .map(productRepository::save)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    }
 
+    private  Product updateExistingProduct(Product existingProduct, UpdateproductRequest request){
+        existingProduct.setName(request.getName());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+        existingProduct.setDescription(request.getDescription());
+
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+
+        return existingProduct;
     }
 
     @Override
