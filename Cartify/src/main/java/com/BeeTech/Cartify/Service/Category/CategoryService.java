@@ -30,17 +30,21 @@ public class CategoryService implements CategoryServiceInt{
     }
 
     @Override
-    public Category updateCategory(Category category) {
+    public Category updateCategory(Category category, Long id) {
         return null;
     }
 
     @Override
     public void deleteCategoryById(Long id) {
-
+        categoryRepository.findById(id)
+                .ifPresentOrElse(
+                        categoryRepository :: delete,
+                        () -> { throw new ResourceNotFound("Category not found");
+                        });
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return null;
+        return categoryRepository.findAll();
     }
 }
