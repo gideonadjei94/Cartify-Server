@@ -37,6 +37,7 @@ public class ProductService implements ProductServiceInt {
         request.setCategory(category);
        return productRepository.save(createProduct(request, category));
     }
+
     private Product createProduct(AddProductRequest request, Category category){
         return new Product(
                 request.getName(),
