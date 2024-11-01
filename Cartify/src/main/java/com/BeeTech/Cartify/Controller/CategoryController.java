@@ -1,12 +1,11 @@
 package com.BeeTech.Cartify.Controller;
 
 import com.BeeTech.Cartify.Exceptions.AlreadyExistsException;
-import com.BeeTech.Cartify.Exceptions.ResourceNotFound;
+import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Category;
 import com.BeeTech.Cartify.Response.ApiResponse;
 import com.BeeTech.Cartify.Service.Category.CategoryServiceInt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +48,7 @@ public class CategoryController {
         try {
             Category theCategory = categoryServiceInt.getCategoryById(id);
             return  ResponseEntity.ok(new ApiResponse("Category found", theCategory));
-        } catch (ResourceNotFound e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -61,7 +60,7 @@ public class CategoryController {
         try {
             Category theCategory = categoryServiceInt.getCategoryByName(name);
             return  ResponseEntity.ok(new ApiResponse("Category found", theCategory));
-        } catch (ResourceNotFound e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -73,7 +72,7 @@ public class CategoryController {
         try {
             categoryServiceInt.deleteCategoryById(id);
             return  ResponseEntity.ok(new ApiResponse("Category found", null));
-        } catch (ResourceNotFound e) {
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
         }
@@ -85,7 +84,7 @@ public class CategoryController {
         try {
             Category updatedCategory = categoryServiceInt.updateCategory(category, id);
             return ResponseEntity.ok(new ApiResponse("Category successfully updated", updatedCategory));
-        } catch (ResourceNotFound e) {
+        } catch (ResourceNotFoundException e) {
            return  ResponseEntity.status(NOT_FOUND)
                    .body(new ApiResponse(e.getMessage(),null));
         }

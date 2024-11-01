@@ -1,7 +1,7 @@
 package com.BeeTech.Cartify.Service.Image;
 
 import com.BeeTech.Cartify.Dto.ImageDto;
-import com.BeeTech.Cartify.Exceptions.ResourceNotFound;
+import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Image;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.ImageRepository;
@@ -26,7 +26,7 @@ public class ImageService implements ImageServiceInt{
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("No image found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No image found with id " + id));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ImageService implements ImageServiceInt{
         imageRepository.findById(id)
                 .ifPresentOrElse(
                         imageRepository::delete,
-                        () -> {throw new ResourceNotFound("No image found with id " + id);
+                        () -> {throw new ResourceNotFoundException("No image found with id " + id);
                         });
     }
 

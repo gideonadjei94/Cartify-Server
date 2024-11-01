@@ -1,6 +1,7 @@
 package com.BeeTech.Cartify.Service.Product;
 
 import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
+import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Category;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.CategoryRepository;
@@ -8,7 +9,6 @@ import com.BeeTech.Cartify.Repository.ProductRepository;
 import com.BeeTech.Cartify.Request.AddProductRequest;
 import com.BeeTech.Cartify.Request.UpdateproductRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class ProductService implements ProductServiceInt {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ProductService implements ProductServiceInt {
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProduct(existingProduct, request))
                 .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     private  Product updateExistingProduct(Product existingProduct, UpdateproductRequest request){

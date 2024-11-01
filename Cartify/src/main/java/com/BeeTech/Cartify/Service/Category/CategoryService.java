@@ -1,7 +1,7 @@
 package com.BeeTech.Cartify.Service.Category;
 
 import com.BeeTech.Cartify.Exceptions.AlreadyExistsException;
-import com.BeeTech.Cartify.Exceptions.ResourceNotFound;
+import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Category;
 import com.BeeTech.Cartify.Repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class CategoryService implements CategoryServiceInt{
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CategoryService implements CategoryServiceInt{
                 .map(oldCategory -> {
                     oldCategory.setName(category.getName());
                     return categoryRepository.save(oldCategory);
-                }).orElseThrow(() -> new ResourceNotFound("Category not found"));
+                }).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CategoryService implements CategoryServiceInt{
         categoryRepository.findById(id)
                 .ifPresentOrElse(
                         categoryRepository :: delete,
-                        () -> { throw new ResourceNotFound("Category not found");
+                        () -> { throw new ResourceNotFoundException("Category not found");
                         });
     }
 
