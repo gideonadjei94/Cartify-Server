@@ -79,7 +79,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/by/brand-and-name")
+    @GetMapping("/by-brand-and-name")
     public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String productBrand, @RequestParam String productName){
         try {
             List<Product> products = productServiceInt.getProductsByBrandAndName(productBrand, productName);
@@ -95,7 +95,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/by/category-and-brand")
+    @GetMapping("/by-category-and-brand")
     public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String category, @RequestParam String brand){
         try {
             List<Product> products = productServiceInt.getProductsByCategoryAndBrand(category, brand);
@@ -127,7 +127,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/by/brand")
+    @GetMapping("/by-brand")
     public ResponseEntity<ApiResponse> getProductByBrand(@RequestParam String brand){
         try {
             List<Product> products = productServiceInt.getProductsByBrand(brand);
@@ -143,7 +143,7 @@ public class ProductController {
     }
 
 
-    @GetMapping("/by/category")
+    @GetMapping("/by-category")
     public ResponseEntity<ApiResponse> getProductByCategory(@RequestParam String category){
         try {
             List<Product> products = productServiceInt.getProductsByCategory(category);
