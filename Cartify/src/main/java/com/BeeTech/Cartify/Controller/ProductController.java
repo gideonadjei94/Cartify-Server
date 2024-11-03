@@ -159,4 +159,14 @@ public class ProductController {
     }
 
 
+    @GetMapping("/product/count")
+    public ResponseEntity<ApiResponse> countProductsByBrandAndName(@RequestParam String brand, @RequestParam String name){
+        try {
+            var productCount = productServiceInt.countProductsByBrandAndName(brand, name);
+            return ResponseEntity.ok(new ApiResponse("", productCount));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("An error occured", e.getMessage()));
+        }
+    }
 }
