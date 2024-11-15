@@ -1,5 +1,6 @@
 package com.BeeTech.Cartify.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,9 @@ public class Image {
     private Long id;
     private String fileName;
     private String fileType;
+    @JsonIgnore
     @Lob
-    private Blob image;
+    private byte[] image;
     private String downloadUrl;
 
     @ManyToOne

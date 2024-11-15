@@ -1,6 +1,7 @@
 package com.BeeTech.Cartify.Controller;
 
 import com.BeeTech.Cartify.Dto.ImageDto;
+import com.BeeTech.Cartify.Exceptions.FileprocessingException;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Image;
 import com.BeeTech.Cartify.Response.ApiResponse;
@@ -41,10 +42,32 @@ public class ImageController {
     @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageServiceInt.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int)image.getImage().length()));
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-                .body(resource);
+        if(image == null){
+            throw new ResourceNotFoundException("Image not found");
+        }
+
+        try {
+            if(image.getImage() == null){
+                throw new IllegalAccessException("Image data is null");
+            }
+
+            byte[] imageData = image.getImage(); // Directly access the byte array
+            ByteArrayResource resource = new ByteArrayResource(imageData);
+
+            String fileType = image.getFileType() != null ? image.getFileType() : "application/octet-stream";
+            String fileName = image.getFileName() != null ? image.getFileName() : "default_filename";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(fileType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
+        } catch (IllegalAccessException e) {
+            throw new FileprocessingException("Error processing image Blob", e);
+        }
+//        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int)image.getImage().length()));
+//        return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+//                .body(resource);
     }
 
 
