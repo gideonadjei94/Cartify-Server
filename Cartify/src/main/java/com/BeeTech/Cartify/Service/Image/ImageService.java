@@ -26,7 +26,7 @@ public class ImageService implements ImageServiceInt{
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No image found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No image found with id: " + id));
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ImageService implements ImageServiceInt{
         imageRepository.findById(id)
                 .ifPresentOrElse(
                         imageRepository::delete,
-                        () -> {throw new ResourceNotFoundException("No image found with id " + id);
+                        () -> {throw new ResourceNotFoundException("No image found with id: " + id);
                         });
     }
 

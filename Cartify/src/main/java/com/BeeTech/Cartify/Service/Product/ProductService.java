@@ -1,7 +1,10 @@
 package com.BeeTech.Cartify.Service.Product;
 
+import com.BeeTech.Cartify.Dto.ImageDto;
+import com.BeeTech.Cartify.Dto.ProductDto;
 import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
+import com.BeeTech.Cartify.Mappers.ProductMapper;
 import com.BeeTech.Cartify.Model.Category;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.CategoryRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +24,8 @@ public class ProductService implements ProductServiceInt {
 
 
     private final ProductRepository productRepository;
-
     private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -81,8 +85,11 @@ public class ProductService implements ProductServiceInt {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.BeeTech.Cartify.Controller;
 
+import com.BeeTech.Cartify.Dto.ProductDto;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Request.AddProductRequest;
@@ -26,7 +27,7 @@ public class ProductController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts(){
-        List<Product> products = productServiceInt.getAllProducts();
+        List<ProductDto> products = productServiceInt.getAllProducts();
         return ResponseEntity.ok(new ApiResponse("success",products));
     }
 

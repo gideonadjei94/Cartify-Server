@@ -1,5 +1,6 @@
 package com.BeeTech.Cartify.Service.Product;
 
+import com.BeeTech.Cartify.Dto.ProductDto;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Request.AddProductRequest;
 import com.BeeTech.Cartify.Request.UpdateproductRequest;
@@ -11,7 +12,7 @@ public interface ProductServiceInt {
     Product getProductById(Long id);
     void deleteProductById(Long id);
     Product updateProduct(UpdateproductRequest product, Long productId);
-    List<Product> getAllProducts();
+    List<ProductDto> getAllProducts();
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);
     List<Product> getProductsByCategoryAndBrand(String category, String brand);
