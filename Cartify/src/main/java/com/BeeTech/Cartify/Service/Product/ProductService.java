@@ -28,14 +28,15 @@ public class ProductService implements ProductServiceInt {
     private final ProductMapper productMapper;
 
     @Override
-    public Product addProduct(AddProductRequest request) {
+    public ProductDto addProduct(AddProductRequest request) {
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategoryName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategoryName());
                     return categoryRepository.save(newCategory);
                 });
 
-       return productRepository.save(createProduct(request, category));
+       Product product = productRepository.save(createProduct(request, category));
+       return new ProductMapper().apply(product);
     }
 
     private Product createProduct(AddProductRequest request, Category category){
@@ -47,11 +48,16 @@ public class ProductService implements ProductServiceInt {
                 request.getDescription(),
                 category
         );
+
+
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    public ProductDto getProductById(Long id) {
+
+        return productRepository.findById(id)
+                .map(new ProductMapper()::apply)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID: " + id + " not found"));
     }
 
     @Override
@@ -93,28 +99,43 @@ public class ProductService implements ProductServiceInt {
     }
 
     @Override
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategoryName(category);
+    public List<ProductDto> getProductsByCategory(String category) {
+        return productRepository.findByCategoryName(category)
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Product> getProductsByBrand(String brand) {
-        return productRepository.findByBrand(brand);
+    public List<ProductDto> getProductsByBrand(String brand) {
+        return productRepository.findByBrand(brand)
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
-        return productRepository.findByCategoryNameAndBrand(category, brand);
+    public List<ProductDto> getProductsByCategoryAndBrand(String category, String brand) {
+        return productRepository.findByCategoryNameAndBrand(category, brand)
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Product> getProductsByName(String name) {
-        return productRepository.findByName(name);
+    public List<ProductDto> getProductsByName(String name) {
+        return productRepository.findByName(name)
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Product> getProductsByBrandAndName(String brand, String name) {
-        return productRepository.findByBrandAndName(brand, name);
+    public List<ProductDto> getProductsByBrandAndName(String brand, String name) {
+        return productRepository.findByBrandAndName(brand, name)
+                .stream()
+                .map(productMapper)
+                .collect(Collectors.toList());
     }
 
     @Override

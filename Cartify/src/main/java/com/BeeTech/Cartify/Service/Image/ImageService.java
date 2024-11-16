@@ -1,10 +1,12 @@
 package com.BeeTech.Cartify.Service.Image;
 
 import com.BeeTech.Cartify.Dto.ImageDto;
+import com.BeeTech.Cartify.Dto.ProductDto;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Image;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.ImageRepository;
+import com.BeeTech.Cartify.Repository.ProductRepository;
 import com.BeeTech.Cartify.Service.Product.ProductServiceInt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class ImageService implements ImageServiceInt{
 
     private final ImageRepository imageRepository;
     private final ProductServiceInt productServiceInt;
+    private final ProductRepository productRepository;
 
     @Override
     public Image getImageById(Long id) {
@@ -40,7 +44,8 @@ public class ImageService implements ImageServiceInt{
 
     @Override
     public List<ImageDto> saveImages(List<MultipartFile> files, Long productId) {
-        Product product = productServiceInt.getProductById(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with Id: " + productId + " is not found"));
         List<ImageDto> savedImageDtos = new ArrayList<>();
         for(MultipartFile file : files){
             try{

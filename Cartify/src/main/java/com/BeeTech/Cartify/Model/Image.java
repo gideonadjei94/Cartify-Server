@@ -1,5 +1,6 @@
 package com.BeeTech.Cartify.Model;
 
+import com.BeeTech.Cartify.Dto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

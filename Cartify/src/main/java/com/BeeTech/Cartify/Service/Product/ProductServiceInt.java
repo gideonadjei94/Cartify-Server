@@ -8,15 +8,15 @@ import com.BeeTech.Cartify.Request.UpdateproductRequest;
 import java.util.List;
 
 public interface ProductServiceInt {
-    Product addProduct(AddProductRequest product);
-    Product getProductById(Long id);
+    ProductDto addProduct(AddProductRequest product);
+    ProductDto getProductById(Long id);
     void deleteProductById(Long id);
     Product updateProduct(UpdateproductRequest product, Long productId);
     List<ProductDto> getAllProducts();
-    List<Product> getProductsByCategory(String category);
-    List<Product> getProductsByBrand(String brand);
-    List<Product> getProductsByCategoryAndBrand(String category, String brand);
-    List<Product> getProductsByName(String name);
-    List<Product> getProductsByBrandAndName(String band, String name);
+    List<ProductDto> getProductsByCategory(String category);
+    List<ProductDto> getProductsByBrand(String brand);
+    List<ProductDto> getProductsByCategoryAndBrand(String category, String brand);
+    List<ProductDto> getProductsByName(String name);
+    List<ProductDto> getProductsByBrandAndName(String band, String name);
     Long countProductsByBrandAndName(String brand, String name);
 }
