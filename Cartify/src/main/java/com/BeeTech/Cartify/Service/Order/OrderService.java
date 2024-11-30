@@ -8,11 +8,14 @@ import com.BeeTech.Cartify.Model.OrderItem;
 import com.BeeTech.Cartify.Model.Product;
 import com.BeeTech.Cartify.Repository.OrderRepository;
 import com.BeeTech.Cartify.Repository.ProductRepository;
+import com.BeeTech.Cartify.Service.Cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,12 +24,22 @@ public class OrderService implements OrderServiceInt{
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
 
+    @Transactional
     @Override
     public Order placeOrder(Long userId) {
 
-        return null;
+        Cart cart =  cartService.getCartByUserId(userId);
+        Order order = createOrder(cart);
+        List<OrderItem> orderItemList = createOrderItems(order, cart);
+        order.setOrderItems(new HashSet<>(orderItemList));
+        order.setTotalAmount(calculateTotalAmount(orderItemList));
+        Order savedOrder = orderRepository.save(order);
+        cartService.clearCart(cart.getId());
+
+        return savedOrder;
     }
 
     private Order createOrder(Cart cart){
@@ -64,5 +77,10 @@ public class OrderService implements OrderServiceInt{
     public Order getOrder(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+    }
+
+    @Override
+    public List<Order> getUserOrders(Long userId){
+        return orderRepository.findByUserId(userId);
     }
 }

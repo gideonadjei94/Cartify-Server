@@ -1,10 +1,11 @@
 package com.BeeTech.Cartify.Repository;
 
-import com.BeeTech.Cartify.Model.Cart;
+import com.BeeTech.Cartify.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
-public interface CartRepository extends JpaRepository<Cart, Long> {
-    Cart findByUserId(Long userId);
+public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByEmail(String email);
 }
