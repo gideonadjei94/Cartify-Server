@@ -1,7 +1,9 @@
 package com.BeeTech.Cartify.Service.Order;
 
+import com.BeeTech.Cartify.Dto.OrderDto;
 import com.BeeTech.Cartify.Enums.OrderStatus;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
+import com.BeeTech.Cartify.Mappers.OrderMapper;
 import com.BeeTech.Cartify.Model.Cart;
 import com.BeeTech.Cartify.Model.Order;
 import com.BeeTech.Cartify.Model.OrderItem;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class OrderService implements OrderServiceInt{
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final OrderMapper orderMapper;
 
 
     @Transactional
@@ -74,13 +78,17 @@ public class OrderService implements OrderServiceInt{
 
 
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
+                .map(orderMapper::apply)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId){
-        return orderRepository.findByUserId(userId);
+    public List<OrderDto> getUserOrders(Long userId){
+        return orderRepository.findByUserId(userId)
+                .stream()
+                .map(orderMapper)
+                .collect(Collectors.toList());
     }
 }

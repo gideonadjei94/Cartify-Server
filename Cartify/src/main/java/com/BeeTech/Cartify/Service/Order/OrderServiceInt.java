@@ -1,12 +1,13 @@
 package com.BeeTech.Cartify.Service.Order;
 
+import com.BeeTech.Cartify.Dto.OrderDto;
 import com.BeeTech.Cartify.Model.Order;
 
 import java.util.List;
 
 public interface OrderServiceInt {
     Order placeOrder(Long userId);
-    Order getOrder(Long orderId);
+    OrderDto getOrder(Long orderId);
 
-    List<Order> getUserOrders(Long userId);
+    List<OrderDto> getUserOrders(Long userId);
 }

@@ -1,5 +1,6 @@
 package com.BeeTech.Cartify.Controller;
 
+import com.BeeTech.Cartify.Dto.OrderDto;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Order;
 import com.BeeTech.Cartify.Response.ApiResponse;
@@ -36,7 +37,7 @@ public class OrderController {
     @GetMapping("/order/{orderId}")
     public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderId){
         try {
-            Order order = orderServiceInt.getOrder(orderId);
+            OrderDto order = orderServiceInt.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse("Order Fetched Successfully", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
@@ -47,7 +48,7 @@ public class OrderController {
     @GetMapping("/order")
     public ResponseEntity<ApiResponse> getUserOrders(@RequestParam Long userId){
         try {
-            List<Order> order = orderServiceInt.getUserOrders(userId);
+            List<OrderDto> order = orderServiceInt.getUserOrders(userId);
             return ResponseEntity.ok(new ApiResponse("Order Fetched Successfully", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)

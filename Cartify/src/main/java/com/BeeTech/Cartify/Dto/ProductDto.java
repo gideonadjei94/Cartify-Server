@@ -1,7 +1,6 @@
 package com.BeeTech.Cartify.Dto;
 
 import com.BeeTech.Cartify.Model.Category;
-import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
