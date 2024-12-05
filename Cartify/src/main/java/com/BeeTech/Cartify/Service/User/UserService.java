@@ -1,7 +1,9 @@
 package com.BeeTech.Cartify.Service.User;
 
+import com.BeeTech.Cartify.Dto.UserDto;
 import com.BeeTech.Cartify.Exceptions.AlreadyExistsException;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
+import com.BeeTech.Cartify.Mappers.UserMapper;
 import com.BeeTech.Cartify.Model.User;
 import com.BeeTech.Cartify.Repository.UserRepository;
 import com.BeeTech.Cartify.Request.CreateUserRequest;
@@ -15,16 +17,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInt {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
 
     @Override
-    public User getUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         return userRepository.findById(userId)
+                .map(userMapper)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
-    public User createUser(CreateUserRequest request) {
+    public UserDto createUser(CreateUserRequest request) {
         return Optional.of(request)
                 .filter(user -> !userRepository.existsByEmail(request.getEmail()))
                         .map(req -> {
@@ -33,17 +37,19 @@ public class UserService implements UserServiceInt {
                             user.setPassword(request.getPassword());
                             user.setFirstName(request.getFirstName());
                             user.setLastName(request.getLastName());
-                            return userRepository.save(user);
+                            User savedUser = userRepository.save(user);
+                            return userMapper.apply(savedUser);
                         }).orElseThrow(() -> new AlreadyExistsException(request.getEmail() + " already exists"));
     }
 
     @Override
-    public User updateUser(UpdateUserRequest request, Long userId) {
+    public UserDto updateUser(UpdateUserRequest request, Long userId) {
         return userRepository.findById(userId)
                 .map(user -> {
             user.setFirstName(request.getFirstName());
             user.setLastName(request.getLastName());
-            return userRepository.save(user);
+            User savedUser = userRepository.save(user);
+            return userMapper.apply(savedUser);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
