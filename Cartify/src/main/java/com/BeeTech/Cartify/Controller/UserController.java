@@ -8,7 +8,9 @@ import com.BeeTech.Cartify.Request.CreateUserRequest;
 import com.BeeTech.Cartify.Request.UpdateUserRequest;
 import com.BeeTech.Cartify.Response.ApiResponse;
 import com.BeeTech.Cartify.Service.User.UserServiceInt;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,8 @@ public class UserController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody CreateUserRequest request){
+    public ResponseEntity<ApiResponse> createUser(@Valid @RequestBody CreateUserRequest request){
+
         try {
             UserDto user = userServiceInt.createUser(request);
             return  ResponseEntity
@@ -46,6 +49,7 @@ public class UserController {
                     .status(CONFLICT)
                     .body(new ApiResponse(e.getMessage(), null));
         }
+
     }
 
 

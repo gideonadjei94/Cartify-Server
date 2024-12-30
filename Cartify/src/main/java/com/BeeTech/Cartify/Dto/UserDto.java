@@ -8,8 +8,7 @@ public record UserDto(
          Long id,
          String firstName,
          String lastName,
-         String email,
-         CartDto cart,
-         List<OrderDto> orders
+         String email
+
 ) {
 }
