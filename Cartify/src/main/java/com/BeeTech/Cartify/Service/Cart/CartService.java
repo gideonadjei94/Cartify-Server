@@ -1,7 +1,9 @@
 package com.BeeTech.Cartify.Service.Cart;
 
+import com.BeeTech.Cartify.Dto.UserDto;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Model.Cart;
+import com.BeeTech.Cartify.Model.User;
 import com.BeeTech.Cartify.Repository.CartItemRepository;
 import com.BeeTech.Cartify.Repository.CartRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -45,11 +48,14 @@ public class CartService implements CartServiceInt {
     }
 
     @Override
-    public Long initializeNewCart(){
-        Cart newCart = new Cart();
-        Long newCartId = cartIdGenerator.incrementAndGet();
-        newCart.setId(newCartId);
-        return cartRepository.save(newCart).getId();
+    public Cart initializeNewCart(User user){
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    return cartRepository.save(newCart);
+
+                });
     }
 
     @Override

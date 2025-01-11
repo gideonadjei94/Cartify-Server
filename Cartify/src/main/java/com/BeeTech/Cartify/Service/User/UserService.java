@@ -28,6 +28,12 @@ public class UserService implements UserServiceInt {
     }
 
     @Override
+    public User findUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found"));
+    }
+
+    @Override
     public UserDto createUser(CreateUserRequest request) {
         return Optional.of(request)
                 .filter(user -> !userRepository.existsByEmail(request.getEmail()))
