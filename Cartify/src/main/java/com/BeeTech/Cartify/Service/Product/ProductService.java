@@ -2,6 +2,7 @@ package com.BeeTech.Cartify.Service.Product;
 
 import com.BeeTech.Cartify.Dto.ImageDto;
 import com.BeeTech.Cartify.Dto.ProductDto;
+import com.BeeTech.Cartify.Exceptions.AlreadyExistsException;
 import com.BeeTech.Cartify.Exceptions.ProductNotFoundException;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
 import com.BeeTech.Cartify.Mappers.ProductMapper;
@@ -29,6 +30,11 @@ public class ProductService implements ProductServiceInt {
 
     @Override
     public ProductDto addProduct(AddProductRequest request) {
+
+        if(productExists(request.getName(), request.getBrand())){
+            throw new AlreadyExistsException(request.getName() + " already exists");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategoryName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategoryName());
@@ -38,6 +44,12 @@ public class ProductService implements ProductServiceInt {
        Product product = productRepository.save(createProduct(request, category));
        return new ProductMapper().apply(product);
     }
+
+
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name, brand);
+    }
+
 
     private Product createProduct(AddProductRequest request, Category category){
         return new Product(
