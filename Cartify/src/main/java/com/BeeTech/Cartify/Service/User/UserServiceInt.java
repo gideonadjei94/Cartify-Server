@@ -15,4 +15,5 @@ public interface UserServiceInt {
     UserDto updateUser(UpdateUserRequest request, Long userId);
     void deleteUser(Long userId);
 
+    User getAuthenticatedUser();
 }

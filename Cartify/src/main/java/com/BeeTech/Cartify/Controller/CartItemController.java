@@ -9,12 +9,14 @@ import com.BeeTech.Cartify.Service.Cart.CartItemServiceInt;
 import com.BeeTech.Cartify.Service.Cart.CartServiceInt;
 import com.BeeTech.Cartify.Service.User.UserService;
 import com.BeeTech.Cartify.Service.User.UserServiceInt;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,13 +31,17 @@ public class CartItemController {
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity){
         try {
-            User user = userServiceInt.findUserById(1L);
+            User user = userServiceInt.getAuthenticatedUser();
             Cart cart = cartServiceInt.initializeNewCart(user);
 
             cartItemServiceInt.addCartItem(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Item successfully added", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }catch (JwtException e){
+            return ResponseEntity
+                    .status(UNAUTHORIZED)
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }

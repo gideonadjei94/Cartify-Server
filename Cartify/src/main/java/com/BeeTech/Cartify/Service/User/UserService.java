@@ -9,6 +9,9 @@ import com.BeeTech.Cartify.Repository.UserRepository;
 import com.BeeTech.Cartify.Request.CreateUserRequest;
 import com.BeeTech.Cartify.Request.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class UserService implements UserServiceInt {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -40,7 +44,7 @@ public class UserService implements UserServiceInt {
                         .map(req -> {
                             User user = new User();
                             user.setEmail(request.getEmail());
-                            user.setPassword(request.getPassword());
+                            user.setPassword(passwordEncoder.encode(request.getPassword()));
                             user.setFirstName(request.getFirstName());
                             user.setLastName(request.getLastName());
                             User savedUser = userRepository.save(user);
@@ -65,5 +69,12 @@ public class UserService implements UserServiceInt {
                 .ifPresentOrElse(userRepository::delete, () -> {
                     throw new ResourceNotFoundException("User not found");
                 });
+    }
+
+    @Override
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email);
     }
 }
