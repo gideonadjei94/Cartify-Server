@@ -2,6 +2,7 @@ package com.BeeTech.Cartify.Security.Config;
 
 import com.BeeTech.Cartify.Security.JWT.AuthTokenFilter;
 import com.BeeTech.Cartify.Security.JWT.JwtAuthEntryPoint;
+import com.BeeTech.Cartify.Security.JWT.JwtUtils;
 import com.BeeTech.Cartify.Security.User.ShopUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ShopConfig {
     private final ShopUserDetailsService userDetailsService;
     private final JwtAuthEntryPoint authEntryPoint;
+    private final AuthTokenFilter  authTokenFilter;
 
     private static final List<String> SECURED_URLS = List.of("/api/v1/carts/**", "/api/v1/cartItems/**", "/api/v1/products/**");
 
@@ -34,10 +36,10 @@ public class ShopConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthTokenFilter authTokenFilter(){
-        return new AuthTokenFilter();
-    }
+//    @Bean
+//    public AuthTokenFilter authTokenFilter(){
+//        return new AuthTokenFilter();
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -62,7 +64,7 @@ public class ShopConfig {
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
                         .anyRequest().permitAll());
         http.authenticationProvider(daoAuthenticationProvider());
-        http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
