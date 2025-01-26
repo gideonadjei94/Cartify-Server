@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: Cobby@123
       MYSQL_DATABASE: Cartify
     ports:
-      - "3306:3306"
+      - "3308:3306"
     networks:
       - cartify-network
     volumes:
