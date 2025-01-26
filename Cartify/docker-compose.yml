@@ -23,7 +23,7 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqlDb:3306/Cartify
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqlDb:3308/Cartify
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Cobby@123
     ports:
