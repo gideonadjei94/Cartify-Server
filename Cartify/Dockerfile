@@ -1,5 +1,5 @@
-FROM openjdk:17-jdk
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
-COPY target/Cartify-0.0.1-SNAPSHOT.jar /app/cartify.jar
+COPY target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 EXPOSE 8000
-CMD ["java", "-jar", "cartify.jar"]
