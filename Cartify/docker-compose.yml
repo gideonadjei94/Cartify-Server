@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysqlDb
+    environment:
+      MYSQL_ROOT_PASSWORD: Cobby@123
+      MYSQL_DATABASE: Cartify
+    ports:
+      - "3306:3306"
+    networks:
+      - cartify-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: always
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cartify-app
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqlDb:3306/Cartify
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Cobby@123
+    ports:
+      - "8000:8080"
+    networks:
+      - cartify-network
+
+networks:
+  cartify-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
