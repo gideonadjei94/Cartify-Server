@@ -3,14 +3,12 @@ package com.BeeTech.Cartify.Controller;
 import com.BeeTech.Cartify.Dto.UserDto;
 import com.BeeTech.Cartify.Exceptions.AlreadyExistsException;
 import com.BeeTech.Cartify.Exceptions.ResourceNotFoundException;
-import com.BeeTech.Cartify.Model.User;
 import com.BeeTech.Cartify.Request.CreateUserRequest;
 import com.BeeTech.Cartify.Request.UpdateUserRequest;
 import com.BeeTech.Cartify.Response.ApiResponse;
 import com.BeeTech.Cartify.Service.User.UserServiceInt;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +28,7 @@ public class UserController {
             return ResponseEntity.ok(new ApiResponse("User fetched successfully", user));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity
-                    .status(NOT_FOUND)
+                    .status(CREATED)
                     .body(new ApiResponse(e.getMessage(), null));
         }
     }

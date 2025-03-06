@@ -9,6 +9,7 @@ import com.BeeTech.Cartify.Repository.CartItemRepository;
 import com.BeeTech.Cartify.Repository.CartRepository;
 import com.BeeTech.Cartify.Repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 public class CartItemService implements CartItemServiceInt{
-    private final CartItemRepository cartItemRepository;
+    private final  CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final CartServiceInt cartServiceInt;
     private final CartRepository cartRepository;
